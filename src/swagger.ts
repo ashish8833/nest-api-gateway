@@ -1,10 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestApplication } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-export default async function (app: NestApplication) {
-  const configService = app.get(ConfigService);
+export default async function (app) {
 
   const logger = new Logger();
 
@@ -14,7 +12,7 @@ export default async function (app: NestApplication) {
 
   const docVersion: string = '1';
 
-  const docPrefix: string = 'api/v1/';
+  const docPrefix: string = 'api/v1/docs';
 
   const swaggerDocBuild = new DocumentBuilder()
     .setTitle(docName)

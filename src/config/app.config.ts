@@ -8,6 +8,11 @@ export default registerAs('api-gateway', (): Record<string, any> => {
     globalPrefix: '/api',
     nodeEnv: process.env.API_GATE_WAY_ENV,
     swaggerDocument: process.env.API_GATE_WAY_SWAGGER_DOC === 'true' || false,
+    versioing: {
+      enable: true,
+      prefix: 'v',
+      version: '1'
+    }
   };
 
   const schema = Joi.object({
@@ -18,6 +23,7 @@ export default registerAs('api-gateway', (): Record<string, any> => {
       .required()
       .valid('development', 'quality', 'staging', 'production'),
     swaggerDocument: Joi.boolean().required(),
+    versioing: Joi.object().optional()
   });
 
   const { error } = schema.validate(values, { abortEarly: false });
