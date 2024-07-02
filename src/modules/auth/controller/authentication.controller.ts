@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { LoginDocs } from '../docs/login.docs';
+import { DTOLogin } from '../dtos';
 
 @Controller({
   path: 'auth',
@@ -9,7 +10,7 @@ import { LoginDocs } from '../docs/login.docs';
 export class AuthenticationController {
   @Post('/')
   @LoginDocs()
-  async login(@Body() body) {
+  async login(@Body() body: DTOLogin) {
     return {
       ...body,
     };
