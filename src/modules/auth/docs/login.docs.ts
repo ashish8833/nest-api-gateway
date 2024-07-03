@@ -10,7 +10,7 @@ export function LoginDocs(): MethodDecorator {
     Doc<AppHelloSerialization>(CAuthMessage.Success, {
       auth: {
         jwtAccessToken: false,
-        apiKey: true,
+        apiKey: false,
       },
       response: {
         httpStatus: HttpStatus.OK,
@@ -19,6 +19,9 @@ export function LoginDocs(): MethodDecorator {
       request: {
         bodyType: ENUM_DOC_REQUEST_BODY_TYPE.JSON,
       },
+      requestHeader: {
+        timestamp: true,
+      }
     })
   );
 }
