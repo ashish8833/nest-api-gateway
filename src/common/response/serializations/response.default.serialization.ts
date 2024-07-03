@@ -1,6 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 // import { IMessage } from '../../error/interfaces/message.interface';
 
+export class ResponseMetadataSerialization {
+  languages: string[];
+  timestamp: number;
+  timezone: string;
+  requestId: string;
+  path: string;
+  version: string;
+  repoVersion: string;
+  [key: string]: any;
+}
+
 export class ResponseDefaultSerialization<T = Record<string, any>> {
   @ApiProperty({
     name: 'statusCode',
