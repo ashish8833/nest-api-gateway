@@ -4,10 +4,10 @@ import { ResponseCustomHeadersInterceptor } from './interceptors/response.custom
 
 @Module({
   providers: [
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: ResponseCustomHeadersInterceptor,
-    // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseCustomHeadersInterceptor,
+    },
   ],
 })
-export class ResponseModule { }
+export class ResponseModule {}
