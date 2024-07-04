@@ -76,8 +76,6 @@ export class HelperDateService implements IHelperDateService {
     date?: string | number | Date,
     options?: IHelperDateOptionsCreate
   ): number {
-    console.log('this.timestamp');
-
     const mDate = moment(date ?? undefined);
 
     if (options?.startOfDay) {
