@@ -4,17 +4,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import config from './config';
-import { ResponseModule } from './common/response/response.module';
-import { RequestModule } from './common/request/request.module';
-import { HelperModule } from './common/helper/helper.module';
+import { CommonModule } from './common/common.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: config,
+      isGlobal: true,
+      cache: true,
     }),
-    HelperModule,
-    RequestModule,
-    ResponseModule,
+    CommonModule,
     AuthModule,
   ],
   controllers: [AppController],

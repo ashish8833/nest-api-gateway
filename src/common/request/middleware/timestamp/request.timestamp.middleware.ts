@@ -16,7 +16,6 @@ export class RequestTimestampMiddleware implements NestMiddleware {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    console.log(req.headers['x-timestamp']);
     req.__xTimestamp = (req.headers['x-timestamp'] as string)
       ? this.helperNumberService.create(req.headers['x-timestamp'] as string)
       : undefined;
