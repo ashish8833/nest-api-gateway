@@ -5,11 +5,13 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import config from './config';
 import { ResponseModule } from './common/response/response.module';
+import { RequestModule } from './common/request/request.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: config,
     }),
+    RequestModule,
     ResponseModule,
     AuthModule,
   ],
