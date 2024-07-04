@@ -6,11 +6,13 @@ import { AuthModule } from './modules/auth/auth.module';
 import config from './config';
 import { ResponseModule } from './common/response/response.module';
 import { RequestModule } from './common/request/request.module';
+import { HelperModule } from './common/helper/helper.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: config,
     }),
+    HelperModule,
     RequestModule,
     ResponseModule,
     AuthModule,
