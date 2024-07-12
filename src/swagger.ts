@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export default async function (app) {
-
   const logger = new Logger();
 
   const docName: string = 'API';
@@ -25,6 +24,10 @@ export default async function (app) {
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'accessToken'
+    )
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'refreshToken'
     )
     .build();
 

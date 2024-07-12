@@ -16,7 +16,7 @@ import {
 } from '../../constants/auth.constant';
 
 @Injectable()
-export class JwtRefreshAuthGuar extends AuthGuard('jwt-refresh') {
+export class JwtRefreshAuthGuar extends AuthGuard('jwt') {
   private request: IRequestApp;
 
   canActivate(context: ExecutionContext) {

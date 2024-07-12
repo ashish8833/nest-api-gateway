@@ -7,13 +7,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LoginDocs } from '../docs/login.docs';
-import { DTOLogin } from '../dtos';
+import { DTOLogin, DTORefreshToken } from '../dtos';
 import { Response } from 'src/common/response/decorators/response.decorator';
 import { LoginSerialization } from '../serializations/login.serialization';
 import { CAuthMessage } from '../constants/auth.constant';
 import { LoginServices } from '../services';
 import { JwtAccessAuthGuard } from '../guards/jwt-access/jwt-access.guard';
 import { MeDocs } from '../docs/me.docs';
+import { JwtRefreshAuthGuar } from '../guards/jwt-refresh/jwt-refresh.guard';
+import { RefreshDocs } from '../docs/refresh.docs';
 
 @Controller({
   path: 'auth',
@@ -47,4 +49,10 @@ export class AuthenticationController {
       lastName: 'Kadam',
     };
   }
+
+  @Post('/refresh')
+  @UseGuards(JwtRefreshAuthGuar)
+  @Response(CAuthMessage.Success)
+  @RefreshDocs()
+  async refresh(@Body() body: DTORefreshToken) {}
 }
