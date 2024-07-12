@@ -1,10 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { LoginDocs } from '../docs/login.docs';
 import { DTOLogin } from '../dtos';
 import { Response } from 'src/common/response/decorators/response.decorator';
 import { LoginSerialization } from '../serializations/login.serialization';
 import { CAuthMessage } from '../constants/auth.constant';
 import { LoginServices } from '../services';
+import { JwtAuthGuard } from '../guards/jwt-access/jwt.guard';
 
 @Controller({
   path: 'auth',
@@ -24,10 +25,27 @@ export class AuthenticationController {
       password
     } = body;
 
-    await this.loginService.login(email, password)
+    const tokens = await this.loginService.login(email, password)
 
     return {
       ...body,
+      ...tokens
     };
+  }
+
+
+
+  @Get('/me')
+  @UseGuards(JwtAuthGuard)
+  @Response(CAuthMessage.Success)
+  async me(@Request() req) {
+
+    console.log(req.user)
+
+    return {
+      "email": "ashish.kadam83@gmail.com",
+      "password": "Ashish123$"
+    }
+
   }
 }

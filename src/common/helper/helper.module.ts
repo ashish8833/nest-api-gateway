@@ -31,20 +31,7 @@ import { HelperFileService } from './services/helper.file.service';
     ],
     controllers: [],
     imports: [
-        JwtModule.registerAsync({
-            inject: [ConfigService],
-            imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => ({
-                secret: configService.get<string>(
-                    'helper.jwt.defaultSecretKey'
-                ),
-                signOptions: {
-                    expiresIn: configService.get<string>(
-                        'helper.jwt.defaultExpirationTime'
-                    ),
-                },
-            }),
-        }),
+        JwtModule
     ],
 })
-export class HelperModule {}
+export class HelperModule { }

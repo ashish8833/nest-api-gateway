@@ -55,7 +55,7 @@ export class LoginServices {
             email,
             password
         }, {
-            secretKey: this.accessTokenEncryptKey,
+            secretKey: this.accessTokenSecretKey,
             expiredIn: this.accessTokenExpirationTime,
             notBefore: this.accessTokenNotBeforeExpirationTime,
             audience: this.audience,
@@ -63,10 +63,23 @@ export class LoginServices {
             subject: this.subject,
         })
 
-        console.log(accessToken);
+
+        const refreshToken = await this.helperEncryptionService.jwtEncrypt({
+            email,
+            password
+        }, {
+            secretKey: this.refreshTokenSecretKey,
+            expiredIn: this.refreshTokenExpirationTime,
+            notBefore: this.refreshTokenNotBeforeExpirationTime,
+            audience: this.audience,
+            issuer: this.issuer,
+            subject: this.subject,
+        })
+
 
         return {
             accessToken,
+            refreshToken,
             email,
             password
         }

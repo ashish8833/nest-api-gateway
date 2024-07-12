@@ -1,15 +1,20 @@
 import {
+  BadRequestException,
   CallHandler,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   NestInterceptor,
+  UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { ResponseDefaultSerialization, ResponseMetadataSerialization } from '../serializations/response.default.serialization';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Request, Response } from 'express';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import {
   RESPONSE_MESSAGE_PATH_META_KEY,
   RESPONSE_MESSAGE_PROPERTIES_META_KEY,
@@ -31,8 +36,53 @@ export class ResponseDefaultInterceptor<T>
   constructor(private readonly reflector: Reflector) { }
 
   async intercept(context: ExecutionContext, next: CallHandler<Promise<T>>) {
+    console.log('HTTP');
     if (context.getType() === 'http') {
       return next.handle().pipe(
+        catchError((error) => {
+
+          console.log(error);
+
+          const ctx: HttpArgumentsHost = context.switchToHttp();
+          const request: IRequestApp = ctx.getRequest<IRequestApp>();
+
+          const __customLang = request.__customLang;
+          const __requestId = request.__id;
+          const __path = request.path;
+          const __timestamp =
+            request.__xTimestamp ?? request.__timestamp;
+          const __timezone = request.__timezone;
+          const __version = request.__version;
+          const __repoVersion = request.__repoVersion;
+
+          let metadata: ResponseMetadataSerialization = {
+            languages: __customLang,
+            timestamp: __timestamp,
+            timezone: __timezone,
+            requestId: __requestId,
+            path: __path,
+            version: __version,
+            repoVersion: __repoVersion,
+          };
+
+          if (error instanceof UnprocessableEntityException) {
+            return throwError(() => {
+              return new HttpException({
+                ...(error.getResponse() as Record<string, unknown>),
+                metadata
+              }, HttpStatus.UNPROCESSABLE_ENTITY)
+            })
+          }
+
+          if (error instanceof UnauthorizedException) {
+            console.log(error.getStatus());
+          }
+
+          return throwError(() => {
+            return new HttpException({ message: 'Internal server error' }, HttpStatus.INTERNAL_SERVER_ERROR)
+          })
+
+        }),
         map(async (res: Promise<Record<string, any>>) => {
           const ctx: HttpArgumentsHost = context.switchToHttp();
           const response: Response = ctx.getResponse();
@@ -120,7 +170,7 @@ export class ResponseDefaultInterceptor<T>
 
           return {
             statusCode,
-            messagePath,
+            message: messagePath,
             _metadata: metadata,
             data,
           };
@@ -129,6 +179,7 @@ export class ResponseDefaultInterceptor<T>
     }
     return next.handle();
   }
+
 
   // intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
   //   return handler.handle().pipe(

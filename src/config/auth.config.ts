@@ -24,9 +24,7 @@ export default registerAs('auth', (): Record<string, any> => {
     subject: process.env.AUTH_JWT_SUBJECT,
     audience: process.env.AUTH_JWT_AUDIENCE,
     issuer: process.env.AUTH_JWT_ISSUER,
-
-
-    // prefixAuthorization: 'Bearer',
+    prefixAuthorization: 'Bearer',
     // payloadEncryption:
     //     process.env.AUTH_JWT_PAYLOAD_ENCRYPT === 'true' ? true : false,
     // password: {
@@ -55,6 +53,7 @@ export default registerAs('auth', (): Record<string, any> => {
     subject: Joi.string().required(),
     audience: Joi.string().required(),
     issuer: Joi.string().required(),
+    prefixAuthorization: Joi.string().required(),
   });
 
   const { error } = schema.validate(values, { abortEarly: false });
