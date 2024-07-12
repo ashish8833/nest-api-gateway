@@ -11,7 +11,10 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable, throwError } from 'rxjs';
-import { ResponseDefaultSerialization, ResponseMetadataSerialization } from '../serializations/response.default.serialization';
+import {
+  ResponseDefaultSerialization,
+  ResponseMetadataSerialization,
+} from '../serializations/response.default.serialization';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Request, Response } from 'express';
 import { catchError, map } from 'rxjs/operators';
@@ -32,16 +35,14 @@ import { IRequestApp } from 'src/common/request/interfaces/request.interface';
 
 @Injectable()
 export class ResponseDefaultInterceptor<T>
-  implements NestInterceptor<Promise<T>> {
-  constructor(private readonly reflector: Reflector) { }
+  implements NestInterceptor<Promise<T>>
+{
+  constructor(private readonly reflector: Reflector) {}
 
   async intercept(context: ExecutionContext, next: CallHandler<Promise<T>>) {
-    console.log('HTTP');
     if (context.getType() === 'http') {
       return next.handle().pipe(
         catchError((error) => {
-
-          console.log(error);
 
           const ctx: HttpArgumentsHost = context.switchToHttp();
           const request: IRequestApp = ctx.getRequest<IRequestApp>();
@@ -49,8 +50,7 @@ export class ResponseDefaultInterceptor<T>
           const __customLang = request.__customLang;
           const __requestId = request.__id;
           const __path = request.path;
-          const __timestamp =
-            request.__xTimestamp ?? request.__timestamp;
+          const __timestamp = request.__xTimestamp ?? request.__timestamp;
           const __timezone = request.__timezone;
           const __version = request.__version;
           const __repoVersion = request.__repoVersion;
@@ -67,11 +67,14 @@ export class ResponseDefaultInterceptor<T>
 
           if (error instanceof UnprocessableEntityException) {
             return throwError(() => {
-              return new HttpException({
-                ...(error.getResponse() as Record<string, unknown>),
-                metadata
-              }, HttpStatus.UNPROCESSABLE_ENTITY)
-            })
+              return new HttpException(
+                {
+                  ...(error.getResponse() as Record<string, unknown>),
+                  metadata,
+                },
+                HttpStatus.UNPROCESSABLE_ENTITY
+              );
+            });
           }
 
           if (error instanceof UnauthorizedException) {
@@ -79,25 +82,24 @@ export class ResponseDefaultInterceptor<T>
           }
 
           return throwError(() => {
-            return new HttpException({ message: 'Internal server error' }, HttpStatus.INTERNAL_SERVER_ERROR)
-          })
-
+            return new HttpException(
+              { message: 'Internal server error' },
+              HttpStatus.INTERNAL_SERVER_ERROR
+            );
+          });
         }),
         map(async (res: Promise<Record<string, any>>) => {
           const ctx: HttpArgumentsHost = context.switchToHttp();
           const response: Response = ctx.getResponse();
           const request: IRequestApp = ctx.getRequest<IRequestApp>();
 
-
           let messagePath: string = this.reflector.get<string>(
             RESPONSE_MESSAGE_PATH_META_KEY,
             context.getHandler()
           );
-          const classSerialization: ClassConstructor<any> =
-            this.reflector.get<ClassConstructor<any>>(
-              RESPONSE_SERIALIZATION_META_KEY,
-              context.getHandler()
-            );
+          const classSerialization: ClassConstructor<any> = this.reflector.get<
+            ClassConstructor<any>
+          >(RESPONSE_SERIALIZATION_META_KEY, context.getHandler());
           const classSerializationOptions: ClassTransformOptions =
             this.reflector.get<ClassTransformOptions>(
               RESPONSE_SERIALIZATION_OPTIONS_META_KEY,
@@ -113,8 +115,7 @@ export class ResponseDefaultInterceptor<T>
           const __customLang = request.__customLang;
           const __requestId = request.__id;
           const __path = request.path;
-          const __timestamp =
-            request.__xTimestamp ?? request.__timestamp;
+          const __timestamp = request.__xTimestamp ?? request.__timestamp;
           const __timezone = request.__timezone;
           const __version = request.__version;
           const __repoVersion = request.__repoVersion;
@@ -146,13 +147,10 @@ export class ResponseDefaultInterceptor<T>
               );
             }
 
-            statusCode =
-              _metadata?.customProperty?.statusCode ?? statusCode;
-            messagePath =
-              _metadata?.customProperty?.message ?? messagePath;
+            statusCode = _metadata?.customProperty?.statusCode ?? statusCode;
+            messagePath = _metadata?.customProperty?.message ?? messagePath;
             messageProperties =
-              _metadata?.customProperty?.messageProperties ??
-              messageProperties;
+              _metadata?.customProperty?.messageProperties ?? messageProperties;
 
             delete _metadata?.customProperty;
 
@@ -179,7 +177,6 @@ export class ResponseDefaultInterceptor<T>
     }
     return next.handle();
   }
-
 
   // intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
   //   return handler.handle().pipe(
