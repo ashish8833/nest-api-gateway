@@ -11,8 +11,8 @@ export default registerAs('api-gateway', (): Record<string, any> => {
     versioing: {
       enable: true,
       prefix: 'v',
-      version: '1'
-    }
+      version: '1',
+    },
   };
 
   const schema = Joi.object({
@@ -23,7 +23,7 @@ export default registerAs('api-gateway', (): Record<string, any> => {
       .required()
       .valid('development', 'quality', 'staging', 'production'),
     swaggerDocument: Joi.boolean().required(),
-    versioing: Joi.object().optional()
+    versioing: Joi.object().optional(),
   });
 
   const { error } = schema.validate(values, { abortEarly: false });

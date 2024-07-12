@@ -59,6 +59,6 @@ export class AuthenticationController {
   @Response(CAuthMessage.Success)
   @RefreshDocs()
   async refresh(@Body() body: DTORefreshToken, @Request() req) {
-    console.log(req.user);
+    return this.refreshTokenService.token(req.user.email, req.user.password);
   }
 }
