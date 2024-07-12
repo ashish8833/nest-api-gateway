@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -11,7 +12,7 @@ import { DTOLogin, DTORefreshToken } from '../dtos';
 import { Response } from 'src/common/response/decorators/response.decorator';
 import { LoginSerialization } from '../serializations/login.serialization';
 import { CAuthMessage } from '../constants/auth.constant';
-import { LoginServices } from '../services';
+import { LoginServices, RefreshTokenServices } from '../services';
 import { JwtAccessAuthGuard } from '../guards/jwt-access/jwt-access.guard';
 import { MeDocs } from '../docs/me.docs';
 import { JwtRefreshAuthGuar } from '../guards/jwt-refresh/jwt-refresh.guard';
@@ -22,7 +23,10 @@ import { RefreshDocs } from '../docs/refresh.docs';
   version: '2',
 })
 export class AuthenticationController {
-  constructor(private readonly loginService: LoginServices) {}
+  constructor(
+    private readonly loginService: LoginServices,
+    private readonly refreshTokenService: RefreshTokenServices
+  ) {}
 
   @Post('/')
   @LoginDocs()
@@ -54,5 +58,7 @@ export class AuthenticationController {
   @UseGuards(JwtRefreshAuthGuar)
   @Response(CAuthMessage.Success)
   @RefreshDocs()
-  async refresh(@Body() body: DTORefreshToken) {}
+  async refresh(@Body() body: DTORefreshToken, @Request() req) {
+    console.log(req.user);
+  }
 }

@@ -7,12 +7,11 @@ import {
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { TokenExpiredError } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
-import { Strategy } from 'passport-jwt';
 import { IRequestApp } from 'src/common/request/interfaces/request.interface';
 import { ResponseMetadataSerialization } from 'src/common/response/serializations/response.default.serialization';
 import {
   CAuthMessage,
-  ENUM_ACCESS_TOKEN_CODE_ERROR,
+  ENUM_REFRESH_TOKEN_CODE_ERROR,
 } from '../../constants/auth.constant';
 
 @Injectable()
@@ -47,9 +46,9 @@ export class JwtRefreshAuthGuar extends AuthGuard('jwt') {
       };
 
       throw new UnauthorizedException({
-        errorCode: ENUM_ACCESS_TOKEN_CODE_ERROR.ACCESS_TOKEN_EXPIRE_CODE,
+        errorCode: ENUM_REFRESH_TOKEN_CODE_ERROR.REFRESH_TOKEN_EXPIRE_CODE,
         statusCode: HttpStatus.UNAUTHORIZED,
-        message: CAuthMessage.AccessTokenExpire,
+        message: CAuthMessage.RefreshTokenExpire,
         metadata,
       });
     }
