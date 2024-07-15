@@ -1,61 +1,65 @@
-import { AllowNull, Column, CreatedAt, DataType, Default, Model, Table, UpdatedAt } from "sequelize-typescript";
+import {
+  AllowNull,
+  Column,
+  DataType,
+  Default,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import { v7 as uuidv7 } from 'uuid';
 
-
 @Table({
-    tableName: 'users',
-    schema: 'auth'
+  tableName: 'users',
+  schema: 'auth',
 })
 export class Users extends Model<Users> {
+  @Column({
+    type: DataType.UUID,
+    defaultValue: uuidv7(),
+    primaryKey: true,
+  })
+  uuid: string;
 
-    @Column({
-        type: DataType.UUID,
-        defaultValue: uuidv7(),
-        primaryKey: true,
-    })
-    uuid: string;
+  @AllowNull(false)
+  @Column({
+    type: DataType.STRING,
+  })
+  firstName: string;
 
-    @Column({
-        type: DataType.STRING,
-    })
-    @AllowNull(false)
-    firstName: string;
+  @AllowNull(false)
+  @Column({
+    type: DataType.STRING,
+  })
+  lastName: string;
 
-    @Column({
-        type: DataType.STRING,
-    })
-    @AllowNull(false)
-    lastName: string;
+  @AllowNull(false)
+  @Column({
+    type: DataType.STRING,
+    unique: true,
+  })
+  email: string;
 
-    @Column({
-        type: DataType.STRING,
-        unique: true
-    })
-    @AllowNull(false)
-    email: string;
+  @AllowNull(false)
+  @Column({
+    type: DataType.STRING,
+  })
+  salt: string;
 
-    @Column({
-        type: DataType.STRING,
-    })
-    @AllowNull(false)
-    salt: string;
+  @AllowNull(false)
+  @Column({
+    type: DataType.STRING,
+  })
+  password: string;
 
-    @Column({
-        type: DataType.STRING,
-    })
-    @AllowNull(false)
-    password: string;
+  @Default(true)
+  @Column({
+    type: DataType.BOOLEAN,
+  })
+  isActive: boolean;
 
-    @Column({
-        type: DataType.BOOLEAN
-    })
-    @Default(true)
-    isActive: boolean;
-
-    @Column({
-        type: DataType.BOOLEAN,
-    })
-    @Default(false)
-    isDeleted: boolean;
-
+  @Default(false)
+  @Column({
+    type: DataType.BOOLEAN,
+  })
+  isDeleted: boolean;
 }
