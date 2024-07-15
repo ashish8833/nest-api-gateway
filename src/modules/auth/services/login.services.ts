@@ -75,8 +75,13 @@ export class LoginServices {
       where: {
         email,
       },
-      //   raw: true,
     });
+
+    console.log(users.updatedAt);
+    console.log(users.uuid);
+    console.log(users.firstName);
+    console.log(users.lastName);
+    console.log(users.email);
 
     const accessToken = await this.helperEncryptionService.jwtEncrypt(
       {
@@ -108,12 +113,6 @@ export class LoginServices {
       }
     );
 
-    return {
-      accessToken,
-      refreshToken,
-      email,
-      password,
-      ...users.toJSON(),
-    };
+    return users;
   }
 }

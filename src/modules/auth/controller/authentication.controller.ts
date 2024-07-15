@@ -38,10 +38,7 @@ export class AuthenticationController {
 
     const tokens = await this.loginService.login(email, password);
 
-    return {
-      ...body,
-      ...tokens,
-    };
+    return tokens;
   }
 
   @Get('/me')
