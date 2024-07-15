@@ -31,7 +31,7 @@ export class HelperStringService implements IHelperStringService {
     }
 
     censor(value: string): string {
-        value = value.replaceAll(' ', '');
+        value = value.replace(' ', '');
         const length = value.length;
         if (length <= 3) {
             return value;
@@ -61,8 +61,7 @@ export class HelperStringService implements IHelperStringService {
 
     checkPasswordStrong(password: string, length?: number): boolean {
         const regex = new RegExp(
-            `^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{${
-                length ?? 8
+            `^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{${length ?? 8
             },}$`
         );
 

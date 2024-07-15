@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as moment from 'moment';
+import moment from 'moment';
 import {
   ENUM_HELPER_DATE_DIFF,
   ENUM_HELPER_DATE_FORMAT,

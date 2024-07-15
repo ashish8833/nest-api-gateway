@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
-import * as bytes from 'bytes';
-import * as ms from 'ms';
+import bytes from 'bytes';
+import ms from 'ms';
 import { seconds } from 'src/common/helper/constants/helper.function.constant';
 import { ENUM_REQUEST_METHOD } from 'src/common/request/constants/request.enum.constant';
 
