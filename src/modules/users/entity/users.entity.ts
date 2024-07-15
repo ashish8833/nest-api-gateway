@@ -52,4 +52,10 @@ export class Users extends Model<Users> {
     @Default(true)
     isActive: boolean;
 
+    @Column({
+        type: DataType.BOOLEAN,
+    })
+    @Default(false)
+    isDeleted: boolean;
+
 }
