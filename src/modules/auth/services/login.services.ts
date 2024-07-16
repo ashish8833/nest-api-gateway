@@ -70,18 +70,14 @@ export class LoginServices {
     this.issuer = this.configService.get<string>('auth.issuer');
   }
 
-  async login(email: string, password: string) {
-    const users = await this.userRepository.findOne<Users>({
+  async login(email: string, password: string): Promise<Users[]> {
+    const users = await this.userRepository.findAll<Users>({
       where: {
         email,
       },
+      raw: true,
+      nest: true,
     });
-
-    console.log(users.updatedAt);
-    console.log(users.uuid);
-    console.log(users.firstName);
-    console.log(users.lastName);
-    console.log(users.email);
 
     const accessToken = await this.helperEncryptionService.jwtEncrypt(
       {
@@ -98,6 +94,9 @@ export class LoginServices {
       }
     );
 
+    console.log(users[0].firstName);
+    console.log(typeof users);
+    console.log(users);
     const refreshToken = await this.helperEncryptionService.jwtEncrypt(
       {
         email,
