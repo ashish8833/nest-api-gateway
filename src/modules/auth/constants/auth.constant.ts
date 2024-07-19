@@ -2,6 +2,7 @@ export const CAuthMessage = {
   Success: 'Login Successfully',
   AccessTokenExpire: 'Access token expire',
   RefreshTokenExpire: 'Refresh token expire',
+  LoginFaild: 'Email and password not match'
 };
 
 export enum ENUM_ACCESS_TOKEN_CODE_ERROR {

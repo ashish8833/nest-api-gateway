@@ -33,6 +33,7 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "joi": "^17.13.3",
     "moment": "^2.30.1",

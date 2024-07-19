@@ -3,9 +3,7 @@ import {
   Controller,
   Get,
   Post,
-  Req,
   Request,
-  UseGuards,
 } from '@nestjs/common';
 import { LoginDocs } from '../docs/login.docs';
 import { DTOLogin, DTORefreshToken } from '../dtos';
@@ -15,10 +13,9 @@ import { CAuthMessage } from '../constants/auth.constant';
 import { LoginServices, RefreshTokenServices } from '../services';
 import { MeDocs } from '../docs/me.docs';
 import { RefreshDocs } from '../docs/refresh.docs';
-import { JwtAccessAuthGuard } from 'src/common/auth/guards/jwt-access/jwt-access.guard';
-import { JwtRefreshAuthGuar } from 'src/common/auth/guards/jwt-refresh/jwt-refresh.guard';
 import { RoleAccessPermission } from 'src/common/auth/decorators/roleAccess.decorators';
 import { RefreshTokenDecorators } from 'src/common/auth/decorators/refreshToken.decorators';
+import { ILoginResponse } from '../interfaces';
 
 @Controller({
   path: 'auth',
@@ -28,12 +25,12 @@ export class AuthenticationController {
   constructor(
     private readonly loginService: LoginServices,
     private readonly refreshTokenService: RefreshTokenServices
-  ) {}
+  ) { }
 
   @Post('/')
   @LoginDocs()
   @Response(CAuthMessage.Success, { serialization: LoginSerialization })
-  async login(@Body() body: DTOLogin) {
+  async login(@Body() body: DTOLogin): Promise<ILoginResponse> {
     const { email, password } = body;
 
     const tokens = await this.loginService.login(email, password);

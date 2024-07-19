@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/sequelize';
 import { HelperEncryptionService } from 'src/common/helper/services/helper.encryption.service';
 import { Users } from 'src/modules/users/entity/users.entity';
+import { CAuthMessage } from '../constants/auth.constant';
+import crypto from 'crypto';
+import { HelperHashService } from 'src/common/helper/services/helper.hash.service';
+import { ILoginResponse } from '../interfaces';
 
 @Injectable()
 export class LoginServices {
@@ -30,6 +34,7 @@ export class LoginServices {
   constructor(
     private readonly configService: ConfigService,
     private readonly helperEncryptionService: HelperEncryptionService,
+    private readonly helperHashService: HelperHashService,
     @InjectModel(Users)
     private readonly userRepository: typeof Users
   ) {
@@ -70,8 +75,8 @@ export class LoginServices {
     this.issuer = this.configService.get<string>('auth.issuer');
   }
 
-  async login(email: string, password: string): Promise<Users[]> {
-    const users = await this.userRepository.findAll<Users>({
+  async login(email: string, password: string): Promise<ILoginResponse> {
+    const user = await this.userRepository.findOne<Users>({
       where: {
         email,
       },
@@ -79,10 +84,23 @@ export class LoginServices {
       nest: true,
     });
 
+    if (!user) {
+      throw new UnauthorizedException(CAuthMessage.LoginFaild);
+    }
+
+    const isPasswordMatch = this.helperHashService.pbkdf2SyncPasswordMatch(password, user.salt, user.password);
+
+    if (!isPasswordMatch) {
+      throw new UnauthorizedException(CAuthMessage.LoginFaild);
+    }
+
     const accessToken = await this.helperEncryptionService.jwtEncrypt(
       {
-        email,
-        password,
+        email: user.email,
+        firstName: user.firstName,
+        uuid: user.uuid,
+        lastName: user.lastName,
+        userType: user.userType
       },
       {
         secretKey: this.accessTokenSecretKey,
@@ -94,13 +112,13 @@ export class LoginServices {
       }
     );
 
-    console.log(users[0].firstName);
-    console.log(typeof users);
-    console.log(users);
     const refreshToken = await this.helperEncryptionService.jwtEncrypt(
       {
-        email,
-        password,
+        email: user.email,
+        firstName: user.firstName,
+        uuid: user.uuid,
+        lastName: user.lastName,
+        userType: user.userType
       },
       {
         secretKey: this.refreshTokenSecretKey,
@@ -112,6 +130,14 @@ export class LoginServices {
       }
     );
 
-    return users;
+    return {
+      accessToken,
+      refreshToken,
+      uuid: user.uuid,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      userType: user.userType
+    };
   }
 }

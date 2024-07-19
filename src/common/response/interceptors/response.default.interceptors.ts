@@ -35,9 +35,8 @@ import { IRequestApp } from 'src/common/request/interfaces/request.interface';
 
 @Injectable()
 export class ResponseDefaultInterceptor<T>
-  implements NestInterceptor<Promise<T>>
-{
-  constructor(private readonly reflector: Reflector) {}
+  implements NestInterceptor<Promise<T>> {
+  constructor(private readonly reflector: Reflector) { }
 
   async intercept(context: ExecutionContext, next: CallHandler<Promise<T>>) {
     if (context.getType() === 'http') {
@@ -78,7 +77,15 @@ export class ResponseDefaultInterceptor<T>
           }
 
           if (error instanceof UnauthorizedException) {
-            console.log(error.getStatus());
+            return throwError(() => {
+              return new HttpException(
+                {
+                  ...(error.getResponse() as Record<string, unknown>),
+                  metadata,
+                },
+                HttpStatus.UNAUTHORIZED
+              );
+            });
           }
 
           return throwError(() => {

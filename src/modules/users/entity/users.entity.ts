@@ -62,4 +62,9 @@ export class Users extends Model<Users> {
     type: DataType.BOOLEAN,
   })
   isDeleted: boolean;
+
+  @Column({
+    type: DataType.ENUM("superAdmin", "instanceAdmin", "instanceUser")
+  })
+  userType: string;
 }
