@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { LoginDocs } from '../docs/login.docs';
 import { DTOLogin, DTORefreshToken } from '../dtos';
 import { Response } from 'src/common/response/decorators/response.decorator';
@@ -25,7 +19,7 @@ export class AuthenticationController {
   constructor(
     private readonly loginService: LoginServices,
     private readonly refreshTokenService: RefreshTokenServices
-  ) { }
+  ) {}
 
   @Post('/')
   @LoginDocs()
@@ -44,7 +38,7 @@ export class AuthenticationController {
   @MeDocs()
   async me(@Request() req) {
     return {
-      ...req.user
+      ...req.user,
     };
   }
 
