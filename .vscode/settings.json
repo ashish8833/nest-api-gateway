@@ -1,0 +1,15 @@
+{
+  "editor.accessibilitySupport": "off",
+  "terminal.integrated.fontFamily": "MesloLGS NF",
+  "workbench.colorTheme": "Default Dark Modern",
+  "terminal.integrated.env.osx": {
+    "FIG_NEW_SESSION": "1"
+  },
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.formatOnSave": true,
+  "files.autoSave": "afterDelay",
+  "files.exclude": {
+    "": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
