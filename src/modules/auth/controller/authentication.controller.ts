@@ -44,9 +44,7 @@ export class AuthenticationController {
   @MeDocs()
   async me(@Request() req) {
     return {
-      email: 'ashish.kadam83@gmail.com',
-      firstName: 'Ashish',
-      lastName: 'Kadam',
+      ...req.user
     };
   }
 
